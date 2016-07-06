@@ -40,7 +40,6 @@ public class ExpressionTests {
         }
     }
 
-
     @Test
     public void createIndividualAndDoMinimalReplication() throws Exception {
         Space container = new TestSpace(Optional.empty());
