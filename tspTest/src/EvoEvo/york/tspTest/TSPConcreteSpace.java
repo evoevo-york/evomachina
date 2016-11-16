@@ -1,10 +1,6 @@
 package EvoEvo.york.tspTest;
 
-import EvoEvo.york.machineMetaModel.Individual;
-import EvoEvo.york.machineMetaModel.MetaModelException;
-import EvoEvo.york.machineMetaModel.SearchableSpace;
-import EvoEvo.york.machineMetaModel.Site;
-import EvoEvo.york.machineMetaModel.Space;
+import EvoEvo.york.machineMetaModel.*;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,12 +8,12 @@ import java.util.Optional;
 import java.util.Set;
 
 /** A concrete space used for TSP testing. That is, this space is the world in which journey instances live. */
-public class TSPConcreteSpace extends Space implements SearchableSpace {
+public class TSPConcreteSpace extends ElitistSpace {
     Optional<Journey> _best;
     Optional<Journey> _worst;
 
-    public TSPConcreteSpace(Optional<Space> container) {
-        super(container);
+    public TSPConcreteSpace() {
+        super(Optional.empty());
         _best = Optional.empty();
         _worst = Optional.empty();
     }
@@ -34,7 +30,7 @@ public class TSPConcreteSpace extends Space implements SearchableSpace {
         return _best.isPresent() ? Optional.of(_best.get()) : Optional.empty();
     }
 
-    /** Unimplemented as this is just a test class */
+    /** Unimplemented  */
     @Override
     public void replicateInto(Site target, Individual parent) {
 
@@ -44,6 +40,11 @@ public class TSPConcreteSpace extends Space implements SearchableSpace {
     @Override
     public void replicationRequest(Site source, Site destination) {
 
+    }
+
+    @Override
+    public Optional<Dataset> getDataset() {
+        return Optional.empty();
     }
 
     /** Unimplemented as this is just a test class */
@@ -82,60 +83,16 @@ public class TSPConcreteSpace extends Space implements SearchableSpace {
     private void updateBest(Journey journey) {
         if (!_best.isPresent())
             _best = Optional.of(journey);
-        else if (_best.get().journeyTime() > journey.journeyTime()) {
+        else if (_best.get().compareTo(journey) > 0) {
             _best = Optional.of(journey);
         }
 
         if (!_worst.isPresent())
             _worst = Optional.of(journey);
-        else if (_worst.get().journeyTime() < journey.journeyTime()) {
+        else if (_worst.get().compareTo(journey) < 0) {
             _worst = Optional.of(journey);
         }
     }
 
-    /** Calculate the journey times of all the journeys, throw away the worst half of them and allow the best
-     *  half to reproduce. Answer the best journey. */
-    public Optional<Individual> search() {
-        int size = this.numSubspaces();
-
-        // Delete the worst half of the journeys:
-        int numToLeave = this.numSubspaces()/2;
-        Collection<Space> subspaces = this.getSubspaces();
-        subspaces
-                .parallelStream()
-                .sorted((j1,j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime()))
-                .skip(numToLeave)
-                .forEach((s) -> removeSubspace(s));
-
-        // Prune any spaces that have the same genome but ensure we've still got half of the total as the number
-        // of individual journeys
-        subspaces = this.getSubspaces();
-        Object[] sortedSpaces = subspaces.stream().sorted((j1,j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime())).toArray();
-        for (int i = 1; i < sortedSpaces.length-2; i++) {
-            if (sortedSpaces[i].equals(sortedSpaces[i+1]))
-                this.removeSubspace((Space)sortedSpaces[i]);
-        }
-        int numNewJourneysNeeded = (size/2) - this.numSubspaces();
-        for (int i=0; i<numNewJourneysNeeded; i++) {
-            ((Journey)sortedSpaces[0]).replicate();
-        }
-
-        // Replicate each of the remaining journeys:
-        Collection<Space> journeys = this.getSubspaces();
-        journeys
-                .parallelStream()
-                .forEach((j) -> ((Journey)j).replicate());
-
-        // Return the new best journey:
-        Journey result = (Journey)this.getSubspaces()
-                                      .parallelStream()
-                                      .min((j1, j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime()))
-                                      .get();
-        if (this.numSubspaces() == size) {
-            return Optional.of(result);
-        } else {
-            throw new MetaModelException("Wrong number of journeys was " + size + " and now is " + this.numSubspaces());
-        }
-    }
 }
 

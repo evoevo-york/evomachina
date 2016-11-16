@@ -4,6 +4,7 @@ package EvoEvo.york.tspTest;
 import EvoEvo.york.machineMetaModel.Individual;
 import EvoEvo.york.machineMetaModel.Kloner;
 import EvoEvo.york.machineMetaModel.Machine;
+import EvoEvo.york.machineMetaModel.MetaModelException;
 import EvoEvo.york.machineMetaModel.Simulation;
 import EvoEvo.york.machineMetaModel.Site;
 import EvoEvo.york.machineMetaModel.Space;
@@ -28,7 +29,7 @@ public class Journey extends Individual {
 
     /** Answer the time represented by the receiver. The time is calculated by a machine expressed into the
      *  receiver, the TSPCalculator machine. */
-    public double journeyTime() {
+    /* package private */ Double journeyTime() {
         TSPCalculator calculatorMachine = (TSPCalculator)this.locateMachine(TSPCalculator.class);
         return calculatorMachine.getJourneyTime();
     }
@@ -80,11 +81,19 @@ public class Journey extends Individual {
     }
 
     @Override
+    public int compareTo(Individual o) {
+        if (!Journey.class.isAssignableFrom(o.getClass())) throw new MetaModelException(String.format("Cannot compare individual of type %s with one of type %s", o.getClass(), Journey.class));
+
+        Journey j = (Journey)o;
+        return this.journeyTime().compareTo(j.journeyTime());
+    }
+
+    @Override
     public String toString() {
         StringBuilder b = new StringBuilder("Journey: [");
         b.append(this.getReplicationCount());
         b.append(", ");
-        b.append((int)this.journeyTime());
+        b.append(this.journeyTime());
         b.append(", ");
         Machine k = this.locateMachine(Kloner.class);
         b.append(k.toString());

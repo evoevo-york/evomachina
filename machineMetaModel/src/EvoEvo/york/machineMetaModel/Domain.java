@@ -42,7 +42,7 @@ public class Domain {
             Constructor<? extends Machine> cons = _machineType.getConstructor(Space.class, List.class, Domain.class);
             return cons.newInstance(environment, code, this);
         } catch (Exception e) {
-            throw new MetaModelException("Cannot construct machine of type " + _machineType.getName());
+            throw new MetaModelException("Cannot construct machine of type " + _machineType.getName(), e);
         }
     }
 

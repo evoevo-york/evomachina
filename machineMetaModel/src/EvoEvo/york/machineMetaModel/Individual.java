@@ -9,11 +9,15 @@ import java.util.logging.Logger;
 /** A specific type of space that represents an individual "organism". (Not a type, a specific instance.) Such an
  *  object is required to have at least an instance of all machine that realise the EssentialMachine interface.
  *  As such, behaviour to ensure this is included. */
-public abstract class Individual extends Space {
+public abstract class Individual extends Space
+                                 implements Comparable<Individual> {
     private final static Logger _logger = Logger.getLogger("EvoEvo");
 
     /** The number of times this specific individual has replicated */
     protected int _replicationCount = 0;
+
+    /** The generation count of this particular instance. */
+    protected int _generation;
 
     /** The set of structures that constitute the templates for machines made within this individual. */
     protected Set<Structure> _repository;
@@ -28,16 +32,18 @@ public abstract class Individual extends Space {
         super(container);
         _machines = new HashSet<>();
         _repository = new HashSet<>();
+        _generation = 0;
     }
 
     /** Replicate this individual using the reproducer that should be available. Answer the new individual. */
     public synchronized Individual replicate() {
         _replicationCount++;
         Machine reproducer = this.locateMachine(Reproducer.class);
+        Individual result = (Individual)reproducer.doIt().getEnvironment();
 
-        _logger.fine(String.format("{%d} Replicating individual, replication count is now %d", System.currentTimeMillis(), _replicationCount));
+        _logger.finer(String.format("{%d} Replicating individual, replication count is now %d. %s yields %s", System.currentTimeMillis(), _replicationCount, this, result));
 
-        return (Individual)reproducer.doIt().getEnvironment();
+        return result;
     }
 
     /** Override the Object.clone() method so that the contents of the machine repositories are not copied when this object is clone()d. */
@@ -125,5 +131,23 @@ public abstract class Individual extends Space {
 
     public synchronized int getReplicationCount() {
         return _replicationCount;
+    }
+
+    public int getGeneration() {
+        return _generation;
+    }
+
+    public void setGeneration(int generation) {
+        _generation = generation;
+    }
+
+    /** Answer the size of the total code for a machine of the given type, ignoring whether pearls are coding of non-coding */
+    public int totalCodeSize(Class<? extends Machine> machineType) {
+        for (Structure s : _repository) {
+            if (machineType.isAssignableFrom(s.getDomain().getMachineType())) {
+                return s.size();
+            }
+        }
+        throw new MetaModelException("Cannot find structure for machines of type: " + machineType.getName());
     }
 }

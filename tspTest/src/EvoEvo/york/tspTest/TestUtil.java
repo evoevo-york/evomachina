@@ -1,12 +1,12 @@
 package EvoEvo.york.tspTest;
 
 import EvoEvo.york.machineMetaModel.Domain;
-import EvoEvo.york.machineMetaModel.Individual;
 import EvoEvo.york.machineMetaModel.Kloner;
 import EvoEvo.york.machineMetaModel.Pearl;
 import EvoEvo.york.machineMetaModel.Simulation;
 import EvoEvo.york.machineMetaModel.Space;
 import EvoEvo.york.machineMetaModel.Structure;
+import EvoEvo.york.machineMetaModel.Util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -86,22 +86,6 @@ public class TestUtil {
         for (int i=start; i <= end; i++) output.add(input.get(i));
     }
 
-    public static void AddTTMachines(Individual container, Domain transcriberDomain, Domain translatorDomain, Domain reproducerDomain, Domain klonerDomain, List<Pearl> klonerSequence) {
-        Structure transcriberTemplate = new Structure(container, new ArrayList<>(), transcriberDomain);
-        container.addMachineTemplate(transcriberTemplate);
-        container.addMachine(transcriberDomain.constructMachine(container, new ArrayList<>()));
-
-        Structure translatorTemplate = new Structure(container, new ArrayList<>(), translatorDomain);
-        container.addMachineTemplate(translatorTemplate);
-        container.addMachine(translatorDomain.constructMachine(container, new ArrayList<>()));
-
-        Structure reproducerTemplate = new Structure(container, new ArrayList<>(), reproducerDomain);
-        container.addMachineTemplate(reproducerTemplate);
-
-        Structure klonerTemplate = new Structure(container, klonerSequence, klonerDomain);
-        container.addMachineTemplate(klonerTemplate);
-    }
-
 
     /** Create a single route that visits all cities in the domain by constructing a sequential route and using a 10-opt algorithm to
      *  shuffle it about. */
@@ -139,21 +123,11 @@ public class TestUtil {
         for (int i = mink; i <= maxk; i++) {
             klonerCode.add(new KlonerPearl(klonerDomain, i, i == initialk));
         }
-        AddTTMachines(j, transcriberDomain, translatorDomain, reproducerDomain, klonerDomain, klonerCode);
+        Util.AddTTMachines(j, transcriberDomain, translatorDomain, reproducerDomain, klonerDomain, klonerCode);
 
         j.addMachineTemplate(new Structure(j, route, tspDomain));
 
         return j;
     }
 
-    static void LoadProperties(String propertiesFileName) {
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(propertiesFileName));
-            Simulation.SetProperties(properties);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(2);
-        }
-    }
 }

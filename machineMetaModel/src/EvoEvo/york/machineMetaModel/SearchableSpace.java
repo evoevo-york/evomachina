@@ -26,6 +26,9 @@ public interface SearchableSpace extends Runnable {
     /** Register the notion that the given Site is a suitable target for replication */
     void replicationRequest(Site source, Site destination);
 
+    /** Provide the set of data that is required for this search */
+    public Optional<Dataset> getDataset();
+
     /** Answer the number of individuals that this searchable space contains */
     long numIndividuals();
 }

@@ -2,8 +2,6 @@ package EvoEvo.york.tspTest;
 
 import EvoEvo.york.machineMetaModel.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -101,7 +99,7 @@ public class Main {
         }
 
         // Load the Properties files into the Simulation class that is referred to by the rest of the code:
-        TestUtil.LoadProperties(args[0]);
+        Util.LoadProperties(args[0]);
         Machine.Initialise();
         _Logger.info("Initial population: " + Simulation.GetValue("numToroidalJourneys", 20));
 

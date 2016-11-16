@@ -100,6 +100,11 @@ public class MetaModelTests {
         }
 
         @Override
+        public int compareTo(Individual o) {
+            return 0;
+        }
+
+        @Override
         public void run() {
         }
     }

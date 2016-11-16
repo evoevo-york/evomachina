@@ -69,6 +69,15 @@ public class Simulation {
         return Integer.valueOf(_Properties.get().getProperty(key));
     }
 
+    /** Answer the value with the given name. If  it does not exist, throw an exception */
+    public static String GetString(String key) {
+        EnsureProperties();
+        if (!_Properties.get().containsKey(key)) {
+            throw new MetaModelException("Properties do not contain key " + key);
+        }
+        return _Properties.get().getProperty(key);
+    }
+
     public static void SetValue(String key, int value) {
         EnsureProperties();
         _Properties.get().put(key, String.valueOf(value));

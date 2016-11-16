@@ -2,10 +2,13 @@ package EvoEvo.york.tspTest;
 
 import EvoEvo.york.machineMetaModel.Kloner;
 import EvoEvo.york.machineMetaModel.Machine;
+import EvoEvo.york.machineMetaModel.MicrobialGASpace;
 import EvoEvo.york.machineMetaModel.Pearl;
 import EvoEvo.york.machineMetaModel.Simulation;
+import EvoEvo.york.machineMetaModel.Util;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class MGAMain {
@@ -22,10 +25,10 @@ public class MGAMain {
         Main.SetUp();
 
         // Load the Properties files into the Simulation class that is referred to by the rest of the code:
-        TestUtil.LoadProperties(args[0]);
+        Util.LoadProperties(args[0]);
 
         // Create SearchableSpace for MGA approach:
-        MicrobialGATSPSpace world = new MicrobialGATSPSpace();
+        MicrobialGASpace world = new MicrobialGASpace(Optional.empty());
 
         // Create a complete set of journeys in the new space:
         int numJourneys = Simulation.GetValue("numMGAJourneys", 100);

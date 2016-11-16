@@ -64,6 +64,11 @@ public class ToroidalTSP2DSpace extends Toroidal2DSpace implements SearchableSpa
         _replications.add((Toroid2DSite)destination);
     }
 
+    @Override
+    public Optional<Dataset> getDataset() {
+        return Optional.empty();
+    }
+
     /** Run the receiver which, at the moment, means to carry out the requested replications */
     @Override
     public void run() {
@@ -81,7 +86,7 @@ public class ToroidalTSP2DSpace extends Toroidal2DSpace implements SearchableSpa
                         best = neighbours
                                    .stream()
                                    .map(s -> s.getASubspace())
-                                   .min((j1, j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime()));
+                                   .min((j1, j2) -> ((Individual)j1).compareTo((Individual)j2));
                     } catch (Exception e) {
                         best = Optional.empty();
                     }
@@ -103,7 +108,7 @@ public class ToroidalTSP2DSpace extends Toroidal2DSpace implements SearchableSpa
                        .stream()
                        .filter(s -> !s.isEmpty())
                        .map(sp -> sp.getASubspace())
-                       .min((j1, j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime()));
+                       .min((j1, j2) -> ((Individual)j1).compareTo((Individual)j2));
         } catch (Exception e) {
             // On occasions the space will not have a subspace by the time we get around to looking at it. Just press on regardless in that case:
             best = Optional.empty();
@@ -117,7 +122,7 @@ public class ToroidalTSP2DSpace extends Toroidal2DSpace implements SearchableSpa
                                           .parallelStream()
                                           .filter(s -> !s.isEmpty())
                                           .map((s) -> s.getASubspace())
-                                          .sorted((j1, j2) -> (int)(((Journey)j2).journeyTime() - ((Journey)j1).journeyTime()))
+                                          .sorted((j1, j2) -> ((Individual)j2).compareTo((Individual)j1))
                                           .collect(Collectors.toList());
 
         orderedJourneys.stream().limit(orderedJourneys.size()/2).forEach((j) -> j.getContainer().get().empty());
@@ -137,7 +142,7 @@ public class ToroidalTSP2DSpace extends Toroidal2DSpace implements SearchableSpa
             Journey bestMatch = (Journey)neighbours
                                                  .stream()
                                                  .map(sp -> sp.getASubspace())
-                                                 .min((j1, j2) -> (int)(((Journey)j1).journeyTime() - ((Journey)j2).journeyTime()))
+                                                 .min((j1, j2) -> ((Individual)j1).compareTo((Individual)j2))
                                                  .get();
             synchronized (_replicants) {
                 _replicants.put(s, bestMatch);

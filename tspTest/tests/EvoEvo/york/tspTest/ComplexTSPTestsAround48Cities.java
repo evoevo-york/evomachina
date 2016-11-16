@@ -144,11 +144,11 @@ public class ComplexTSPTestsAround48Cities {
         }
 
         // Create a space that will contain the new individual and any constructed copes:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Create a journey as an individual space within the world space:
         Journey j = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         // Create a structure that describes this route:
         Structure s = new Structure(j, route, _cityDomain);
@@ -186,7 +186,7 @@ public class ComplexTSPTestsAround48Cities {
         }
 
         // Create a space that will contain the new individual and any constructed copes:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Make 10 identical journeys:
         for (int i = 0; i<2; i++) {
@@ -209,7 +209,7 @@ public class ComplexTSPTestsAround48Cities {
 
     private void makeJourney(List<Pearl> route, Space world, Domain domain) {
         Journey j = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         j.addMachineTemplate(new Structure(j, route, domain));
     }
@@ -226,7 +226,7 @@ public class ComplexTSPTestsAround48Cities {
         List<Pearl> route = TestUtil.CreateInitialRandomRoute(_cityDomain, _NUM_CITIES);
 
         // Create the world (a top level world) that will enact the individuals in a parallel manner:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Add many instances of a journey over the already calculated route to the world:
         for (int i =0; i<100; i++) {
@@ -244,7 +244,7 @@ public class ComplexTSPTestsAround48Cities {
         _cityDomain.setMutator((l, k) -> TestUtil.OptN(l, ((KlonerDomain)k.getDomain()).getDegree(k)));
 
         List<Pearl> route = TestUtil.CreateInitialRandomRoute(_cityDomain, _NUM_CITIES);
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
         KlonerDomain kDomain = new KlonerDomain("Kloner domain", Kloner.class);
 
         // Add many instances of a journey over the already calculated route to the world:
@@ -454,7 +454,7 @@ public class ComplexTSPTestsAround48Cities {
     @Test (priority = 100)
     public void singleThreadedSearchInBucketSpaceUsingMicrobialGA() throws Exception {
         // Create SearchableSpace for MGA approach:
-        SearchableSpace world = new MicrobialGATSPSpace();
+        SearchableSpace world = new MicrobialGASpace(Optional.empty());
 
         // Create a complete set of journeys in the new space:
         int numJourneys = Simulation.GetValue("numMGAJourneys", 100);

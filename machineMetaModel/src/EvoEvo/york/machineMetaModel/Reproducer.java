@@ -24,6 +24,8 @@ public class Reproducer extends Machine {
         // of container:
         Individual newIndividual = (Individual)_environment.klone();
 
+        newIndividual.setGeneration(((Individual)_environment).getGeneration()+1);
+
         // Now clone, with errors, the machine template repository into the new individual;
         Kloner c = (Kloner)((Individual)_environment).locateMachine(Kloner.class);
         Set<Structure> newRepository = c.getNewRepository();

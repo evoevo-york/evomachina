@@ -7,6 +7,7 @@ import EvoEvo.york.machineMetaModel.Simulation;
 import EvoEvo.york.machineMetaModel.Structure;
 import EvoEvo.york.machineMetaModel.Transcriber;
 import EvoEvo.york.machineMetaModel.Translator;
+import EvoEvo.york.machineMetaModel.Util;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -160,11 +161,11 @@ public class ComplexTSPTestsAround26Cities {
         }
 
         // Create a space that will contain the new individual and any constructed copes:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Create a journey as an individual space within the world space:
         Journey j = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         // Create a structure that describes this route:
         Structure s = new Structure(j, route, _cityDomain);
@@ -200,7 +201,7 @@ public class ComplexTSPTestsAround26Cities {
         }
 
         // Create a space that will contain the new individual and any constructed copies:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Make 10 identical journeys:
         for (int i = 0; i<10; i++) {
@@ -230,7 +231,7 @@ public class ComplexTSPTestsAround26Cities {
 
     private void makeJourney(List<Pearl> route, TSPConcreteSpace world, Domain domain) {
         Journey j = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         j.addMachineTemplate(new Structure(j, route, domain));
     }
@@ -247,7 +248,7 @@ public class ComplexTSPTestsAround26Cities {
         }
 
         // Create the world (a top level world) that will enact the individuals in a parallel manner:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Add 100 instances of a journey over the already calculated route to the world:
         for (int i =0; i<100; i++) {

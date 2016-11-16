@@ -8,6 +8,7 @@ import EvoEvo.york.machineMetaModel.Reproducer;
 import EvoEvo.york.machineMetaModel.Structure;
 import EvoEvo.york.machineMetaModel.Transcriber;
 import EvoEvo.york.machineMetaModel.Translator;
+import EvoEvo.york.machineMetaModel.Util;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -84,7 +85,7 @@ public class SimpleTSPStructureTests {
 
         // The top level space that contains the new individual:
         Journey container = new Journey(Optional.empty());
-        TestUtil.AddTTMachines(container, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(container, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         // Create a machine template that describes this route:
         Structure s = new Structure(container, route, _cityDomain);
@@ -101,7 +102,7 @@ public class SimpleTSPStructureTests {
 
         // The top level space that contains the new individual:
         Journey container = new Journey(Optional.empty());
-        TestUtil.AddTTMachines(container, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(container, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         // Create a machine template that describes this route:
         Structure s = new Structure(container, route, _cityDomain);
@@ -127,11 +128,11 @@ public class SimpleTSPStructureTests {
         List<Pearl> route = constructSimpleRoute();
 
         // Create a space that will container the new individual and any constructed copes:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // The space that is the first new individual:
         Journey initialJourney = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(initialJourney, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(initialJourney, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         initialJourney.addMachineTemplate(new Structure(initialJourney, route, _cityDomain));
 
@@ -171,11 +172,11 @@ public class SimpleTSPStructureTests {
         List<Pearl> route = constructSimpleRoute();
 
         // Create a space that will contain the new individual and any constructed copies:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // The space that is the first new individual:
         Journey initialJourney = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(initialJourney, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(initialJourney, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         initialJourney.addMachineTemplate(new Structure(initialJourney, route, _cityDomain));
 
@@ -207,7 +208,7 @@ public class SimpleTSPStructureTests {
         List<Pearl> route = constructSimpleRoute();
 
         // Create a space that will container the new individual and any constructed copes:
-        TSPConcreteSpace world = new TSPConcreteSpace(Optional.empty());
+        TSPConcreteSpace world = new TSPConcreteSpace();
 
         // Make 10 identical journeys:
         for (int i = 0; i<10; i++) {
@@ -233,7 +234,7 @@ public class SimpleTSPStructureTests {
 
     private void makeJourney(List<Pearl> route, TSPConcreteSpace world, Domain domain) {
         Journey j = new Journey(Optional.of(world));
-        TestUtil.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
+        Util.AddTTMachines(j, _transcriberDomain, _translatorDomain, _reproducerDomain, _klonerDomain, new ArrayList<>());
 
         j.addMachineTemplate(new Structure(j, route, domain));
     }

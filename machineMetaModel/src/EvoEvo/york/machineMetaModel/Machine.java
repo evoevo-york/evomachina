@@ -18,7 +18,7 @@ public abstract class Machine extends Structure {
             _Handler = new FileHandler(Simulation.GetValue("logFileName", "evoevo.log"), false);
             _Handler.setFormatter(new SimpleFormatter());
             _logger.addHandler(_Handler);
-            _logger.setLevel(Simulation.GetLevel(Level.INFO));
+            _logger.setLevel(Simulation.GetLevel(Level.FINE));
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
